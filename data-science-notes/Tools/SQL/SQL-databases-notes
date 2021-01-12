@@ -1,0 +1,22 @@
+Where tables live
+    - rows live in tables
+    - columns live in tables
+
+SHOW DATABASES; = kind of like "ls" for all DATABASES 
+    . must have semicolon(;) at the end
+
+you can;t be in multiple databases at once
+
+USE(database_name); = sets "current working database" to specified database.
+    . think of thos as cd
+
+SELECT DATABASE(); = shows you currently selected database
+
+SHOW CREATE DATABASE(database_name); = shows the code that created the specified database.
+
+"Database" & "schema" mean the same thing and can be used interchangibly
+
+words like select, insert, create are resered words in MySQL and cant be used for a 
+    . databse
+    . table 
+    . column names

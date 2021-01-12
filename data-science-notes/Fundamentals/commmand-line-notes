@@ -1,0 +1,62 @@
+## Things leaned about Command Line
+
+# Command Line Details
+~ == means home directory
+
+absolute path == where you are according to the root of the file system
+    - Full address or the lat/longitude is a good IRL example
+    - /Users/your_username/Downloads is an example of a absolute path to a file
+    - pwd always means absolute path
+
+Relative path == will change depending on your location b/c your locatiuon will end up chaninging as you move around
+    - That gastation is 2 blocks to the left is a good IRL example
+
+# Command Keys
+ls == lists file/folders in a directory
+cd == navigates to specified directory/folder
+cd ~ == navigates to home directory
+pwd == prints working directory (where am I?)
+cd .. == navigated up a directory
+cd ../.. == navigates up 2
+cd ../../.. == navigatedup 3
+ls ~/ == Downloads lists the files/folders in your Downloads
+ls ~/ == Desktop lists the files/folders on your Desktop
+ls .. == lists files/folders in parent directory
+ls ../.. == lists files/folders in grandparent directory
+ls. == also lists the content of pwd because " . " means " pwd"
+
+
+# Flags
+-a == all files
+-l == long format
+-h == hujan readable output
+-R == HSows all files and folders in a systeem
+% ls -l == long ofrmat.
+    - this outputs the directory listin gin a seies of coums kind of like a table.
+
+You can string multiple of these together
+
+# Tips and tricks
+up arrow key == allows you to seecomman line history
+d == go up half a page
+u == go down half a page
+q == quit
+/ == search soemthing
+control c == terminates process on command line
+
+# Creating Files & Directories
+
+touch == create a new empty file of whatever we specify
+mkdir == creates a new empty directory
+open == opens a specific folder
+rm == alllows you to remove a specific doc right now only files
+tab == autocpmplete
+
+# Moving Files
+
+mv == move
+mv old.txt new.txt == use to rename a file
+mv old.txt progect/new.txt == rename and ...
+mv old.txt project/old.txt mv old.txt project/ == move old.txt into project
+cp == copy
+    - works like move

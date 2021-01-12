@@ -1,0 +1,169 @@
+## Review from Dec 9th 2020
+- What is SQL?
+    - SQL stands for “Structured Query Language”. Think of SQL like Latin.
+    - Specific DB Platforms run their own flavor of SQL:
+        - MySQL (we’ll use in class)
+        - Microsoft SQL Server
+        - Oracle
+        - Postgres
+    - A “SQL Server” means a computer that’s running a specific SQL DB like MySQL
+    - We’ll connect to a MySQL Server in the cloud and you have your own login
+- We’ll do Time Series Analysis on temporal data
+    - We do Time Series Analysis (TSA) when time is an explanatory variable
+    - We use Time Series when the target variable we’re interested in is correlated with itself (from the past)
+        - Saving account growing interest over time
+        - For example, current temperature is correlated with past temperatures
+            - last 7 days of temps
+            - could be this time last year
+    - If there’s any explanatory value from time and we’re looking at that time, then we’re doing TSA.
+    - Concrete Example:
+        - If our goal is to predict stock market prices based on:
+            - season or month
+            - moon cycle
+            - what the price was this time last year... or 5 years ago
+            - this is Time Series Analysis
+        - Predicting stock price based on price to earnings ratio (/w no time data in the dataset)
+            - this would be an example of a regression.
+            - b/c regression is predicting how many or how much of the target variable
+- Example of Classification (Is this observation A or B or C or D...)
+    - Supervised learning task b/c we have labels
+    - Our target variable w/ a classification is a categorical variable we’re trying to predict.
+    - Example: Predicting the specific species of iris flower given petal measurements and sepal measurements
+        - Our target would be predicting what type of iris (virginica, setosa, verisocolor)
+        - Our independent variables are the measurements of the flower pieces
+        - Our training data to fit a model will have labeled species
+    - Example:
+        - We have HR data for a company and our target is Attrition (attrition = if people leave or stay)
+        - IN our dataset, we have a few columns and the target variable as a column
+        - Independent variables would be:
+            - compensation rate (continuous)
+            - on a scale of 1-5, their work-life balance (categorical)
+            - on a scale of 1-3, their amount of travel (none, some, lots) (categorical)
+        - our target w/ attrition is a binary (yes/no)
+    - Classification is all about using our features to develop a decision rule for classifying our outcomes as A or B (or C or D or E)
+    - Is Regression supervised/unsupervised? Supervised == labels == answers
+    - Data Governance = data policy
+        - what do we keep? Why? Who has access? Regulatory requirements, etc...
+        - security policy
+
+## Review from Dec 9th 2020
+Window based operating system:
+WYSIWYG
+What You See Is What You Get
+- you see all the options
+- all the menu options live in the menu
+Unfortunately, w/ a WSYWYG interface, 
+what you see is ALL you get.
+Command Line Interface (CLI) is a way to 
+directly issue commands to your OS.
+- there are hundreds/thousands of CL commands
+We need to be able to orient ourselves on the command line. You may be connecting to servers only through the command line...
+ls is short for list
+cd is short for change directory
+pwd     prints working directory (where am I?)
+cd ~    navigates to the home directory
+ls      lists the files/folders in a directory
+ls ~/Documents   lists files/folders your Documents folder
+ls ~/Downloads
+ls ~/Desktop
+ls -a ~/Desktop
+ls -h ~/Desktop
+ls -a -h -l ~/Downloads
+
+Relative Path vs. Absolute Path
+Relative path example: the gas station is two blocks to the left.
+Absolute Path: the full address or lat/long of that exact gas station
+pwd "print working directory"
+pwd returns the full, absolute path to where you are currently
+ls    "on its own" gives us the files/folders of our pwd
+ls some_subdirectory_from_our_pwd (relative)
+cd ..     navigates "up" a directory (relative to your pwd)
+cd ~      navigate to your home directory which is /Users/your_username
+/               means "root", like C:\
+/Applications   is the applications folder  
+/Users          is the users folder for all user accounts
+/Users/your_username/Desktop
+/Users/your_username/Downloads
+/Users/your_username/Documents
+/Users/your_username is ~
+cd ~ is the same as cd /Users/your_username
+
+ls ..       lists files/folders of the parent folder of pwd
+ls ../..    lists files/folders of the parent folder's parent.
+ls         lists the contents of pwd
+ls .       lists the contents of pwd b/c "." means "pwd"
+
+mv target destination
+# use move to rename a file
+mv old.txt new.txt
+# renames old.txt to new.txt
+# and ..
+mv old.txt project/new.txt
+# move old.txt into project
+mv old.txt project/old.txt
+mv old.txt project/
+# move old.txt up a directory
+mv old.txt ..
+# move old.txt up then into another folder
+mv old.txt ../project2
+copy (cp) works like move (mv)
+cp target destination
+cp target.txt copy.txt
+cp file.txt project/
+cp file.txt file2.txt
+
+`git commit -m “this is a short commit message”
+the m stands for message and is good for short sweet messages
+"git commit" on its own will launch VS Code so you can type longer format commit messages
+
+# Git Practice
+this is my repo for demonstrating practicing git
+## Workflow
+Go to https://github.com/new and make a new repo
+Select any options for readme, license, or gitignore and click OK.
+Go to the green "Code" button on GitHub and copy the git address that looks like git@github.com:ryanorsinger/git_practice.git
+Now, navigate on your computer to the folder you want to be the parent folder and type git clone git@github.com:ryanorsinger/git_practice.git
+You can now do more work inside of this folder...
+To "Add, commit, and push" new content
+## Create a new file or edit an existing file
+git status from your command line
+git add filename.txt where filename.txt is the file you created or edited
+git status to check to makesure that the filename is now green in your terminal
+git commit -m "this is the commit message that explains what I'm adding".
+git push origin main will upload all of your commits!
+
+
+# Command Line tips and tricks
+cd ~ == navigates to home directory
+ls == short for list and will list averything within a folder
+cd == short for directory this command will take you to specified directory
+pwd == prints working directory (Where and I?)
+ls ~/Downloads == lists files/folders in your downloads (You an switch downloads for any other folder or directory)
+cd .. == navigates "up" a directory
+cd ../.. == up 2 directories
+cd ../../.. == up 3 direcoties
+ls .. == lists file/folders of the parent folder
+ls ../.. == lists file/folders of the parents folderof the parent folder... the grandparent folder if you will
+ls. == also lists the content of pws because of the .
+git add . == add all
+PWD ALWAYS GIVES ABSOLUTE PATH!
+Up arrow key == allows you to see command line history
+d == goes up half a page
+u == goes down half a page
+q == to quit
+/ == search something
+
+
+ls -l == long format
+ls -a == all files
+ls -h == human readable output
+ls -R == shows all files and folders in a system
+you can also link multiple of these together
+
+# Creating Fiels and Directories tips and tricks
+touch == create a new empty file
+mkdir == create a new directory
+open == open a specific folder
+rm == remove a specific document (right now only filels)
+tab == autocomplete
+mv == move

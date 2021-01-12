@@ -1,0 +1,160 @@
+Data - 
+    you capture the high volume of datathat is generated with generated with great velocity from a large
+    variety of sources
+
+Infromation -
+    you process raw data into usable info that may be stored, may be streamed, or may be a hybrid
+
+Knowledge -
+    you use data to describe, understand, and explin past events
+
+Intelligence -
+    you predict future events in order to price present actions
+
+Action -
+    you enable users to take action through accessible and unambiguous intel
+
+## Planning Stage
+
+The goal 
+    - clearly define your goal(s), measures of success, and plans on how to achieve that.
+
+The deliverable 
+    - documentation of your goal, your measure of success, and how you plan on getting there. 
+        - if not done, you wont know when you achieve success
+
+Ask yourself:
+    - What will the end product look like?
+    - What format will it be in?
+    - Who will it be delivered to?
+    - How will it be used?
+    - How will I know I'm done?
+    - What is my MVP?
+    - How will I know it's good enough?
+
+Formulatiing hypotheses:
+    - Is attribute V1 related to attribute V2?
+    - Is the mean of target variable Y for subset A significantly different from that of subset B?
+
+
+## Acquisition Stage
+
+AKA
+    - Data Gathering, 
+    - Data Import, 
+    - Data Wrangling (Acquisition + Prep)
+
+the goal
+    -create a path from original data sources to the environment in which you will work with the data. 
+        - You will gather data from sources in order to prepare and clean it in the next step.
+
+the deliverable
+    - a file, acquire.py, that contains the function(s) needed to reproduce the acquisition of data.
+
+## Preparation Stage
+
+AKA
+    - Data Tidying, 
+    - Data Cleansing, 
+    - Data Wrangling (Aquisition + Prep)
+
+The goal   
+    - to have data spit into 3 samples
+        - Train
+        - Validate
+        - Test
+    - in a format that can be easily explored, analyzed, and visulaized. This helps us understand 
+    the geneality of the model.
+
+The deliverable
+    -  file, prep.py, that contains the function(s) needed to reproduce the preparation of the data.
+        - the resulting data frame should be 3 samples  
+            . training the algorithms
+            . validating models
+            . Test
+
+How to get there   
+    - Python libraries: pandas, matplotlib, seaborn, scikit-learn.
+    - Use pandas to perform tasks such as handling null values, outliers, normalizing text, binning 
+    of data, changing data types, etc.
+    - Use matplotlib or seaborn to plot distributions of numeric attributes and target.
+    - Use scikit-learn to split the data into train and test samples.
+
+## Exploration and Pre-processing Stage
+
+AKA 
+    - Exploratory Analysis/visualization, 
+    - Feature Engineering, 
+    - Feature Selection
+
+The goal   
+    - discover features that have the largest impact on the target variable, 
+        - i.e. 
+            . provide the most information gain, 
+            . drive the outcome.
+
+The deliverable 
+    - a file, preprocess.py, that contains the function(s) needed to reproduce the pre-processing of the 
+    data.
+        - This means that attributes are reduced to feathure
+            . features are in numeric form
+        - There are no missing values
+
+How to get there
+    - Use python libraries: 
+        . pandas, 
+        . statsmodels, 
+        . scipy, 
+        . numpy, 
+        . matplotlib, 
+        . seaborn, 
+        . scikit-learn.
+
+## Modeling Stage
+
+The goal 
+    - to create a robust and generalizable model that is a mapping between features and a target outcome.
+
+The deliverable 
+    - a file, model.py, that contains functions for training the model (fit), predicting the target 
+    on new data, and evaluating results.
+
+How to get there:
+    - Python libraries: 
+        . scikit-learn
+
+    - Identify 
+        . regression, 
+        . classification, 
+        . cross validataion, 
+        . other algorithms that are most appropriate.
+
+    - Build your model:
+        . Create the model object.
+        . Fit the model to your training, or in-sample, observations.
+        . Predict the target value on your training observations.
+        . Evaluate results on the in-sample predictions.
+        . Repeat as necessary with other algorithms or hyperparameters.
+        . Using the best performing model, predict on test, out-of-sample, observations.
+        . Evaluate results on the out-of-sample predictions.
+
+## Delivery Stage
+
+The goal 
+    - to enable others to use what you have learned or developed through all the previous stages.
+
+The deliverable 
+    - could be of various types:
+        . A pipeline.py file that takes new observations from acquisition to prediction using the 
+        previously built functions.
+        . A fully deployed model.
+        . A reproducible report and/or presentation with recommendations of actions to take based on 
+        original project goals.
+        . Predictions made on a specific set of observations.
+        . A dashboard for observing/monitoring the key drivers, or features, of the target variable.
+        
+    - How to get there:
+        . Python sklearn's pipeline method.
+        . Tableau for creating a report, presentation, story, or dashboard.
+        . Jupyter notebook for creating a report or a framework to reproduce your research, e.g.
+        . Flask to build a web server that provides a gateway to our model's predictions.

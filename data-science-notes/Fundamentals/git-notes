@@ -1,0 +1,42 @@
+repository: 
+    - a directory managed by git; a directory where the files in it are version controlled with git
+
+git add: 
+    - to tell git which files we wish to look at for the next commit
+    - move a file from untacked to tracked
+    - If you have anything untracked in your repository you must tell it to git add the file you 
+    want tracked
+        . git add codeup/my-new-file.sql
+
+git commit: 
+    - to create a "save point", to formally take a snapshot of a repository
+    - commit previously added files
+    - to record our changes in git's history
+        . if you run jsut git commit by itself, git will open our default editor for us to write 
+        our commit message
+
+git push: 
+    - to copy the state of a local repository elsewhere, most commonly, to send your work with github
+    - pushes to github
+
+
+git init:
+    - se any time we want to create, or initialize, a new repository. This command will tell git that 
+    we wish to track files in this directory, as well as any files in any subdirectories as well. 
+
+Adding fiules is how we take our files from untracked to tracked
+
+git status:
+    - tells you the status of projects in your queue
+    - you should run this fairly frequently
+        . as a new user try and run is between every other git command you execute
+
+git clone:
+    - clone a repository on your terminal
+
+git add --> git commit --> git push
+
+git add.
+    - to git add all
+
+

@@ -1,0 +1,143 @@
+    . JOIN a.k.a. INNER JOIN
+    . LEFT JOIN
+    . RIGHT JOIN
+
+Relpationship Types:
+    - One to One Relationships
+            - reltionships between username and password
+            - relationship between someones first name and last
+            - relationship between emp_no to a birth date
+        . A one to one relationship is expressed with columns on table'
+
+    - One to Many Relationship
+            - one employee could have many different salaries
+            - one employee could have many different titles
+            - a db structure
+        . the "many" table will have a foregn key that points to the "one" table 
+        . the salaries table has anemp_no column that reers to emp_no on employees
+        . means one or more records
+            - an emplouee can have one or many salaries
+
+    - Many to Many Relationship
+            - one employee could belong to many departments
+            - one department could have multiple employees
+        . we usually have an associative table like dept_emp that has foreign keys that to two other 
+        tables primary keys    
+            - one manager can manage miltiple managers over time
+
+------------------------------------------Join Syntax--------------------------------------------
+
+In order to refer to a specific table within a database when needing to reference two or more tables
+use:
+    db_name.table_name.column_name
+
+        SELECT *
+        FROM employees
+        JOIN titles ON employees.emp_no =  titles.emp_no;
+            - this shows how many titles an employee has
+
+        SELECT employees.emp_no, count(*)
+        FROM employees
+        JOIN titles ON employees.emp_no = titles.emp_no
+        GROUP BY emp_no;
+            - shows how many titles each employee has had and has
+
+JOIN 
+    - joinging tables
+
+ON 
+    - decribe relationship
+
+        SELECT employees.employees.first_name
+        FROM employees;
+
+Sometimes the primary key on table a and the foreign key on table b have the same name
+    - like emp_no on employees is primary and on salaries and title it is forign.
+
+Othertimes, the primary key on table a is id and forign on table b is a_id
+
+If we have a foreign keu and a primary that have an identical name we can:
+
+    use employees;
+
+    SELECT *
+    FROM employees
+    JOIN titles USING(emp_no);
+
+    SELECT *
+    FROM employees
+    JOIN titles ON titles.emp_no = employees.emp_no
+
+    SELECT *
+    FROM authors
+    JOIN quotes ON quotes.author_id = author.id
+
+AS names the tables
+
+---------------------------------------Join/Inner Join---------------------------------------------
+
+    SELECT *
+    FROM users
+    JOIN roles ON users.role_id = roles.id;
+
+INNER JOIN is the default joingin
+    - find records from table a that corresponds to a key on table b
+    - returns no nulls (by default)
+    - a logical and statement
+    - the intersection of table A & BY
+
+----------------------------------------Left Join---------------------------------------------------
+
+Gives you all from the first refrence table and some from the second
+
+Give me all the users and tell me wether it is null or not
+
+keeps any records from table A that have nulls to table BY
+
+    SELECT *
+    FROM users
+    LEFT JOIN roles ON roles.id = users.role_id;
+        - by putting users in the from and hoosing left means we get all the users weather or not 
+        they have a role.
+
+----------------------------------------Right Join--------------------------------------------------
+
+Keeps any records from table B that have NULL on table AS
+
+    SELECT *
+    FROM users
+    RIGHT JOIN roles ON role.id = users.role_id
+        - so you can do accomplish a left join by swapping the order of the tables and doing a 
+        right join
+
+----------------------------------------------------------------------------------------------------
+
+Write a query that shows the current salary for all current employees:
+    SELECT *
+    FROM employees
+    JOIN salaries ON salaries.emp_no = employees.emp_no
+    WHERE salaries.to_date > CURDATE();
+
+Show all current emp and the dept name the work
+        - employees on emplyees table
+        - dept name is on department table
+        - dept_emp shows which emp works at which dept for a date range
+    SELECT first_name, last_name, dpt_name, to_date
+    FROM employees
+    JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+    JOIN departments ON dept_emp.dept_no = departments.dept_no
+    where dept_emp.to_date > CURDATE();
+
+Number of joings is the numer of tables - 1 (generally speaking)
+    - a one to many has 2 tables = 1 join
+    - a mny to mamny takes 3 tables = 2 joings
+    - number of tables being used - 1 = number of join
+
+Write a query that returns the employee name, their department, and current salary
+    SELECT first_name, last_name, departments.dept_name, dept_emp.to_date, salaries.to_date
+    FROM employees
+    JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+    JOIN departments ON dept_emp.dept_no = departments.dept_no
+    JOIN salaries ON salaries.emp_no = employees.emp_no
+    WHERE dept_emp.to_date > CURDATE()
+    and salaries.to_date > curdate();

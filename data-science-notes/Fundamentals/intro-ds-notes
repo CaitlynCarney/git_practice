@@ -1,0 +1,183 @@
+Data = Digital representation of information
+Science = An applied and interdisciplinary science, applying scientific knowledge from formal science
+
+Data science is a formal, applied, and interdisciplinary science that works with and analyzes large 
+amounts of data to provide meaningful information that can be used to make decisions and solve problems. 
+    - Data science includes work in computation, statistics, analytics, data mining, and programming.
+    - The purpose of data science is to provide actionable intelligence in the form of testable 
+      explanation, predictions, interactive intelligence, and intelligent machines.
+
+Supervised machine learning:
+    - algorithms use labeled observations, 
+        - i.e. observations with a known outcome or human input, to develop a model that will then 
+        be used to predict or estimate the outcome of new observations which are not known or labeled.
+
+Unsupervised machine learning:
+    - algorithms are considered self-learning as they not rely on labeled observations, 
+        -i.e. 
+            - observations with a known outcome or human input. Whereas the supervised algorithm would 
+            accept and use the labels assigned to it to model the relationship between the inputs 
+            (features) and output (target), an unsupervised algorithm would learn the differences 
+            of observations using only the features (no output) and assign its own labels to 
+            differentiate.
+
+Reinforcement learning:
+    - is a subset of unsupervised machine learning where the machine seeks to maximize reward. 
+    The machine, or "agent," learns through trial and error as well as reward and punishment. 
+    For example, if you are training a machine to win at chess, you would want it to be positively 
+    reinforced when it makes moves that win material, such as capturing a pawn, and negatively reinforced 
+    when it makes moves that lose material, such as having a pawn captured. Combinations of these rewards 
+    and punishments result in a self-learning machine that improves at chess over time.
+
+    Big data:
+        - is an evolving phrase. Recently, it is most commonly used to mean a massive volume of both 
+        structured and unstructured data that is so large it is difficult to process using traditional 
+        database and software techniques. The volume of data is too big, it moves too fast, or it exceeds 
+        current processing capacity. Often it is defined by the "4 V's": Volume, Velocity, Variety, and 
+        Veracity.
+
+Unstructured data: 
+    - is that which does not fit a predefined data model. Often this data does not fit into the typical 
+    row-column structure of a database. Images, emails, videos, audio, and pretty much anything else 
+    that might be difficult to "tabify" might constitute examples of unstructured data.
+
+Structured data: 
+    - is that which can fit into a predefined data model. When working with unstructured data, an early 
+    step is to turn it into structured data, to give it structure.
+
+Data modeling:
+    - is building mathematical or statistical models that turn data into predictive and actionable 
+    information, that can predict and explain outcomes.
+
+Hyperparameter: 
+    - A configuration that is external to the specific model. The value is not estimated from data. 
+    Hyperparameters are used to customize the algorithm for a given problem so that it can more 
+    effectively estimate model parameters. They are usually manually specified when creating the model 
+    object. 
+        - Examples of model hyperparameters include 
+            - the number of decision trees in a random forest and  the k in k-nearest neighbors.
+
+Parameter: 
+    - A configuration variable that is internal to the model. The values are estimated or learned from 
+    data when the model is being 'fit'. They are the part of the model that is learned from historical 
+    training data. The parameters customize the model to your particular problem so that you can then 
+    predict outcomes on new observations. They are saved as part of the learned model. 
+        Examples include: 
+            - the split points of a decision tree, the support vectors in a support vector machine, 
+            the coefficients in a linear regression or logistic regression.
+
+Features: 
+    - The attributes, x, predictor, or independent variables that are used in the model, the "knowns"
+
+Feature Engineering is 
+    - the process of using domain knowledge of the data to create new features. 
+        - For example 
+            - number_of_bathrooms and number_of_bedrooms are strongly correlated, so they are not 
+            candidates for two independent features. An example of feature engineering would be to 
+            build a feature called number_of_bed_or_bath_rooms, instead. Features we create using feature 
+            engineering derive from the existing features, available information, and domain knowledge. 
+            Feature Engineering is most commonly undertaken as part of the exploration process. Feature 
+            engineering is fundamental to the application and success of machine learning.
+
+Target Variable: 
+    - The y, outcome, or dependent variable, the "unknown".
+
+Data visualization 
+    - has 2 primary purposes: 1) to explore data and understand the meaning behind it or 2) to 
+    communicate to others (such as an idea, a finding, a recommendation, or a story).
+
+Programming Language:
+    - Python
+        -Object-oriented programming language
+        - Top data science libraries: Numpy, SciPy, Matplotlib, Pandas, Statsmodels.
+        - Pros: easy to learn and debug, large number of libraries for data science and growing, plenty of resources for learning and using.
+        - Cons: slower in performance speed.
+
+    - R
+        - Open-source version of the proprietary statistical software ‘S’.
+        - Pros: optimal for statistics, intuitive, easy to learn, great IDE (RStudio), great plotting libraries.
+        - Cons: slow in performance speed, not good when dealing with large amounts of data.
+
+    - Julia
+        -High performance, dynamic, multi-paradigm programming language, developed at MIT.
+        - Pros: runs very fast, good for mathematical computation, increasing use in academia and industry.
+        Cons: Julia is still fairly early in its development.
+        
+    - Scala
+        - Functional programming language, stemming from Java.
+        - Pros: seamless integration with Apache Spark, used when dealing with distributed, big data.
+        - Cons: not easy to learn.
+
+Database Platforms
+    -SQL: Structured Query Language
+        - RDBMS: Relational Database Management System.
+        - Structured data only.
+        - Primary data source for business intelligence.
+        - Original use case/primary use case is for managing data for software applications.
+        - Examples: Microsoft SQL Server, MySQL, Oracle PostgresQL.
+
+    - NoSQL: Not Only SQL
+        - Accomdates both structured and unstructured data.
+        - Used when working with big data.
+        - Allows for elastic scaling and flexibility.
+        - Low cost.
+        - Most can be integrated with the hadoop ecosystem.
+        - Examples: Cassandra, HBase, Hive, MongoDB.
+
+    - Graph-based:
+        - Focus on creating, storing, querying and processing graphs.
+        - Used for social network analysis and security threat detection.
+        - Examples: Neo4j, Graphbase
+
+Data Visualization
+
+    - Tableau
+        - Great for BI
+        - Creating dashboards
+        - Telling stories with data
+
+    - Plot.ly
+        -Works with plots in different platforms, easy to use, great quality
+
+    - D3.js
+        - Javascript library
+        - Fast
+        - Supports a variety of datasets
+        - Animations and interactive plots
+
+    - Matplotlib
+        - Python 2D plotting library which produces publication quality figures in a variety of hardcopy 
+        formats and interactive environments across platforms.
+        - Matplotlib can be used in Python scripts, the Python and IPython shells, the Jupyter notebook, 
+        web application servers, and four graphical user interface toolkits.
+
+    - Seaborn
+        - A Python data visualization library based on matplotlib.
+        - It provides a high-level interface for drawing attractive and informative statistical graphics.
+        
+    - Bokeh
+        - An interactive visualization library (python) that targets modern web browsers for presentation.
+        - Its goal is to provide elegant, concise construction of versatile graphics, and to extend this 
+        capability with high-performance interactivity over very large or streaming datasets.
+        - Bokeh can help anyone who would like to quickly and easily create interactive plots, 
+        dashboards, and data applications.
+
+Data Governance
+
+Storing, managing & processing data in a distributed environment
+
+    - Spark
+    
+    - Hadoop
+
+    - Storm
+
+VERSION CONTROL SYSTEMS (VCS)
+
+Important when working in a team that handles the same scripts and project files in general. Good for tracking changes in a program and reverting to previous versions.
+
+    - Git
+
+    - Github
+
+    - GitLab, Bitbucket

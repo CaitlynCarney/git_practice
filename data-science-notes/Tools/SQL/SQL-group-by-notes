@@ -1,0 +1,97 @@
+Similar words as order by
+
+allows to remove duplicates similar to distinct
+
+can also be used in combo with affregate functions
+
+
+        SELECT COUNT(DISTINCT salary)
+        FROM salaries;
+            - will show salaries with no salary being repeated
+
+        SELECT salary
+        FROM salaries
+        GROUP BY salary ASC;
+            - will show salaries with no salary being repeated but this one is in 
+            ascending/increasing order
+
+        SELECT CONCAT(first_name, " ", last_name) AS full_name
+        FROM employees
+        ORDER BY full_name;
+            - gives the same results as:
+                SELECT CONCAT(first_name," ", last_name) AS full_name
+                GROUP BY full_name;
+
+GROUP BY can be done is ascending and descending order
+
+once you have a group by query you can use aggregate functions
+
+aggregate functions:
+    - COUNT
+    - MIN
+    - MAX
+    - AVG
+
+
+        SELECT CONCAT(first_name, " ", last_name) AS full_name, count(*)
+        FROM employees
+        GROUP BY full_name DESC
+        ORDER BY full_name DESC;
+            - this will show distinct full name without repeats. However, will show how many 
+            times a name was repeated.
+
+When you group by you are changing the leavel of your "observation".
+    - On the employees table, each row is a single individual employee/person
+    - But when you group by full name, we loose that layer of detail and you are re-defining
+    the "observation" to be the concat(first_name, " ", last_name)
+
+
+        SELECT dept_no
+        FROM dept_emp
+        GROUP BY dept_no;
+            - shows the departments not repeating
+
+        SELECT dept_no, COUNT(*)
+        FROM dept_emp
+        GROUP BY dept_no;
+            - shwos the departments not repeating but also count how many times the departments 
+            was repeated in the dept_emp column.
+
+When we group by a column we are selecting by. But, we can also count all as well.
+
+        SELECT DISTINCT dept_no
+        FROM dept_emp;
+            - give the same rsults as below query, but the next one can use aggregate functions.
+        SELECT dept_no, count(*)
+        FROM dept_emp
+        GROUP BY dept_no;
+
+        SELECT dept_no, count(*)
+        FROM dept_emp
+        WHERE to_date > CURDATE()
+        GROUP BY dept_no;
+            - Shows number of employees currently employeed
+
+        SELECT *
+        FROM employees
+        WHERE first_name = 'Gorgi';
+            - shows everyone named Georgi in the employees table
+
+        SELECT hire_date
+        FROM employees
+        WHERE first_name = 'Georgi'
+        GROUP BY hire_date;
+            - will now show oeople named Georgi without the same hire hire_date
+
+        SELECT distinct last_name
+        FROM employees
+        WHERE first_name = 'Georgi;
+            - will show the 239 distinct last names for the first name Georgi
+        
+        SELECT last_name, count(*)
+        FROM employees
+        WHERE first_name = 'Georgi'
+        GROUP BY last_name
+        ORDER BY count(*) DESC;
+            - Will show all unique last names for the first name Georgi and a column counting 
+            repeats

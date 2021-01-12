@@ -1,0 +1,108 @@
+## Things leaned about Command Line
+    # Command Line Details
+        ~ == means home directory
+        absolute path == where you are according to the root of the file system
+            - Full address or the lat/longitude is a good IRL example
+            - /Users/your_username/Downloads is an example of a absolute path to a file
+        Relative path == will change depending on your location b/c your locatiuon will end up chaninging as you move around
+            - That gastation is 2 blocks to the left is a good IRL example
+        Command Line Interface (CLI) is a way to directly issue commands to your OS.
+            - there are hundreds/thousands of CL commands
+        We need to be able to orient ourselves on the command line. 
+        You may be connecting to servers only through the command line...
+    #Window based operating system:
+        WYSIWYG
+        What You See Is What You Get
+        - you see all the options
+        - all the menu options live in the menu
+        Unfortunately, w/ a WSYWYG interface, 
+        what you see is ALL you get.
+
+## Command Keys
+        ls == lists file/folders in a directory
+        cd == navigates to specified directory/folder
+        cd ~ == navigates to home directory
+        pwd == prints working directory (where am I?)
+        cd .. == navigated up a directory
+        cd ../.. == navigates up 2
+        cd ../../.. == navigatedup 3
+        ls ~/Documents   lists files/folders your Documents folder
+        ls ~/Downloads
+        ls ~/Desktop
+        cd ~ is the same as cd /Users/your_username
+        ls ..       lists files/folders of the parent folder of pwd
+        ls ../..    lists files/folders of the parent folder's parent.
+        ls         lists the contents of pwd
+        ls .       lists the contents of pwd b/c "." means "pwd"
+    # use move to rename a file
+        mv old.txt new.txt
+    # renames old.txt to new.txt and ..
+        mv old.txt project/new.txt
+    # move old.txt into project
+        mv old.txt project/old.txt
+        mv old.txt project/
+    # move old.txt up a directory
+        mv old.txt ..
+    # move old.txt up then into another folder
+        mv old.txt ../project2
+    # copy (cp) works like move (mv)
+        cp target destination
+        cp target.txt copy.txt
+        cp file.txt project/
+        cp file.txt file2.txt 
+    # Flags
+        -a == all files
+        -l == long format
+        -h == hujan readable output
+        -R == HSows all files and folders in a systeem
+            - You can string multiple of these together
+    # Tips and tricks
+        up arrow key == allows you to seecomman line history
+        d == go up half a page
+        u == go down half a page
+        q == quit
+        / == search soemthing
+    # Relative Path vs. Absolute Path
+        Relative path example: the gas station is two blocks to the left.
+        Absolute Path: the full address or lat/long of that exact gas station
+        pwd returns the full, absolute path to where you are currently
+        ls    "on its own" gives us the files/folders of our pwd
+        ls some_subdirectory_from_our_pwd (relative)
+        cd ..     navigates "up" a directory (relative to your pwd)
+        cd ~      navigate to your home directory which is /Users/your_username
+        /               means "root", like C:\
+        /Applications   is the applications folder  
+        /Users          is the users folder for all user accounts
+        /Users/your_username/Desktop
+        /Users/your_username/Downloads
+        /Users/your_username/Documents
+        /Users/your_username is ~
+    # Command Line tips and tricks
+        cd ~ == navigates to home directory
+        ls == short for list and will list averything within a folder
+        cd == short for directory this command will take you to specified directory
+        pwd == prints working directory (Where and I?)
+        ls ~/Downloads == lists files/folders in your downloads (You an switch downloads for any other folder or directory)
+        cd .. == navigates "up" a directory
+        cd ../.. == up 2 directories
+        cd ../../.. == up 3 direcoties
+        ls .. == lists file/folders of the parent folder
+        ls ../.. == lists file/folders of the parents folderof the parent folder... the grandparent folder if you will
+        ls. == also lists the content of pws because of the .
+        PWD ALWAYS GIVES ABSOLUTE PATH!
+        Up arrow key == allows you to see command line history
+        d == goes up half a page
+        u == goes down half a page
+        q == to quit
+        / == search something
+        ls -l == long format
+        ls -a == all files
+        ls -h == human readable output
+        ls -R == shows all files and folders in a system
+        you can also link multiple of these together
+
+
+
+
+
+

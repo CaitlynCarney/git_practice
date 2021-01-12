@@ -1,0 +1,82 @@
+How to look at data in databases
+
+CRUD operations
+    - create, read, update, and delete
+
+single quotes (') are the SQL standard
+
+if you need to actually use a single guote (') for a string, use either (\') or ('')
+    - \ means forget it
+
+SELECT
+    - limits columns to find and return rows from a table
+        . USE fruits_db;
+        SELECT name, quantity
+        FROM fruits;
+
+*
+    - means all the columns
+
+WHERE
+    - filters our data for us
+        . limits rows
+    - allows you to specify conditions tha tmust be true for a given row to be displayed
+        SELECT *
+        FROM fruits
+        WHERE name = 'dragon fruit
+
+        SELECT *
+        FROM fruits
+        WHERE id = 5
+
+= : Equal
+!= or <> :  Not Equal
+< : less than
+> : greater than
+<= : less than or equal too
+>= : greater than or equal too
+BETWEEN value1 AND value2 : greathe than or equal to value1 and less than of equal to value2
+
+ex:
+    2 = 2;
+    1 = 2;
+    1 < 2;
+    2 <= 3;
+    BETWEEN 1 AND 3;
+    2 != 2;
+    1 > 2;
+
+Remember if it returns 0 it means false and if it returns 1 it means true
+
+Aliases (AS) allow us to temporarily rename a column, table, or mesc piece of our query
+
+AS
+    - command for Aliases 
+        SELECT concat(first_name, ' ', lasy_name) as full_name
+        from employees
+
+you can work SQL skripts on command line
+    MySQL - u USERNMAE -p -h DB_HOST -t < filename.SQL
+
+-u = USERNMAE
+-p = password
+-h = host #
+
+% = wild card and can take 0 or more characters
+
+Sometimes when looking at SQL a column can caontain a string. However, what if you need to see 
+anything rom said column that mention something specific such as the genre "Rock"
+
+    SELECT *
+    FROM albums
+    WHERE genre LIKE 'Rock%'
+        
+        this foramt will show you all songs with a genre which the string contais the "Rock" genre
+
+    SELECT *
+    FROM albums
+    WHERE genre LIKE '%Rock%'
+
+        this will show you all genres with rock in it such as Hard Rock, Alternative Rock, etc.
+
+        
