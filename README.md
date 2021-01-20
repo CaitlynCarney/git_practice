@@ -1,1 +1,1 @@
-# python-exercises
+# numpy-pandas-visualization-exercises
