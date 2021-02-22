@@ -1,0 +1,27 @@
+SQL = Structured Query Language
+
+Databases store infor (text & numbers) better than your file system.
+
+SQL Databases - can store vass amounts of data (contains 10 million rows of info)
+
+RDBMS - the software that manages the date
+    . i.e. handles its storage and trievals
+
+Database - something used interchangabley with a DBMS.
+    . the actual location of the data stored on disk
+
+Database Client - program that can be used to connect Databases
+
+Database Server - computer that runs the DBMS & stores the data
+
+DDL - Data Defintion Language
+    . command change in structure of Database
+
+DML - Data Manipulation Language
+    . used to insert, updat3e, delete, and retrieve info from Database
+
+Statements - What we want
+
+Commands - What we tell it to Defintion
+
+Queries - Are the statements and demands
