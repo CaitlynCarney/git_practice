@@ -1,0 +1,36 @@
+SubQueries:
+    - A query within a query
+
+        select *
+        from table_a
+        where column_a in(
+            select column_a
+            from table_b)
+
+        - think of russian nesting dolls
+
+Joins allow us to stitch together tables based on keys
+
+        select *
+        from employees
+        where emp_no in( 
+            select emp_no
+            from dept_manager
+            where to_date > curdate())
+        and gender = "F";
+
+                . where the emp_no's are located they MUST be the same
+                    - cant be emp_no and dept_no
+                    - can't be emp_no and first_name
+                    - can ONLY be emp_no and emp_no
+
+subqueires using IN are pretty darn fast
+
+        select first_name, last_name, birth_date
+        from employeeswhere emp_no in(
+            select emp_no
+            from dept_manager)
+        limit 10
+
+            - You dont always have to use "in within a subquerie!
+                . you can use "NOT IN" too
