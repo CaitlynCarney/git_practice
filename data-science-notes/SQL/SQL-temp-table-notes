@@ -1,0 +1,104 @@
+only make changes in your temprary tables not in your primary tables
+
+create temp table:
+    - create temporary table table_name(...)
+
+create forever table:
+    - create table table_name(...)
+        . you're just dropping the temporary
+
+Temporary Tables do go away
+
+allows us to take a query and create a table
+
+almost like a variable
+
+can only make temp tables in a dab=tabase where you have permission too do so.
+
+        create tempary table numbers as(
+            select 1, 2, 3, 4, 5 * 12))
+        select *
+        from numbers;
+
+            - will not show up under tables on left but will be shown below.
+              * left is for permanent tables only *
+
+can create one from a query
+
+-----------------------------------------Updating Tables-------------------------------------------
+
+update to modify the info in our table
+
+        update my_numbers
+        set n = n + 1;
+        select *
+        from my_numbers
+
+
+        update my_numbers
+        set n = 500
+        where n = 3
+        select* from my_numbers
+            
+            - using numbers where to isolate specific numbers
+
+---------------------------------------Delete From Tables-------------------------------------------
+
+delete from to remove some records
+
+        delete from my_numbers
+        where n = 3
+
+            - removes 3rd row
+
+        delete from my_numbers
+
+            - deletes all records
+
+___________________________________________________________________________________________________
+
+when working with temp tables:
+    - start by using your own database
+
+        create tamporary table emp_salary as(
+            use easley_1268
+            select *
+            from employees.employees #db_name.table_name
+            join employees.salaries using(emp_no)
+            where to_date > curdate());
+        select *
+        emp_salary;
+
+            - makes temp table of current employees with their emp_salary
+
+3 steps to success:
+    1. use your own database
+            use easley_1268;
+    2. write the query you need to use, using the db_name.table_nmae after your FROM or your join
+            select *
+            from employees.employeesjoin employees.salaries using (emp_no)
+            where to_date > curdate()
+    3. wrap your above query in CREATE TEMPORARY TABLE table_na,e as();
+            create temporary table emp_salary as(
+                select *
+                from employees.employees
+                join employees.salaries using(emp_no)
+                where to_date > curdate());
+            select *
+            from emp_salary;
+
+After we have a temp table we can get to work:
+    - Querying from it
+    - Altering data
+
+What would our total salary be if everyone gets a 5% raise?
+         update emp_salary
+         set salary = salary + salary * 0.05;
+         select *
+         from emp_salary;
+         select *
+         from emp_salary
+         where first_name = "Mary"
+         and salary > 60,000
+
+         
