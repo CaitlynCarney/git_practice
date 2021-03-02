@@ -1,0 +1,33 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="day_Sat <= 0.5\ngini = 0.472\nsamples = 136\nvalue = [84, 52]", fillcolor="#f5cfb4"] ;
+1 [label="tip <= 1.98\ngini = 0.419\nsamples = 87\nvalue = [61, 26]", fillcolor="#f0b78d"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="day_Thur <= 0.5\ngini = 0.117\nsamples = 16\nvalue = [15, 1]", fillcolor="#e78946"] ;
+1 -> 2 ;
+3 [label="gini = 0.278\nsamples = 6\nvalue = [5, 1]", fillcolor="#ea9a61"] ;
+2 -> 3 ;
+4 [label="gini = 0.0\nsamples = 10\nvalue = [10, 0]", fillcolor="#e58139"] ;
+2 -> 4 ;
+5 [label="size <= 3.5\ngini = 0.456\nsamples = 71\nvalue = [46, 25]", fillcolor="#f3c5a5"] ;
+1 -> 5 ;
+6 [label="gini = 0.49\nsamples = 49\nvalue = [28, 21]", fillcolor="#f8e0ce"] ;
+5 -> 6 ;
+7 [label="gini = 0.298\nsamples = 22\nvalue = [18, 4]", fillcolor="#eb9d65"] ;
+5 -> 7 ;
+8 [label="total_bill <= 21.91\ngini = 0.498\nsamples = 49\nvalue = [23, 26]", fillcolor="#e8f4fc"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="total_bill <= 15.73\ngini = 0.478\nsamples = 33\nvalue = [20, 13]", fillcolor="#f6d3ba"] ;
+8 -> 9 ;
+10 [label="gini = 0.488\nsamples = 19\nvalue = [8, 11]", fillcolor="#c9e4f8"] ;
+9 -> 10 ;
+11 [label="gini = 0.245\nsamples = 14\nvalue = [12, 2]", fillcolor="#e9965a"] ;
+9 -> 11 ;
+12 [label="total_bill <= 26.15\ngini = 0.305\nsamples = 16\nvalue = [3, 13]", fillcolor="#67b4eb"] ;
+8 -> 12 ;
+13 [label="gini = 0.0\nsamples = 6\nvalue = [0, 6]", fillcolor="#399de5"] ;
+12 -> 13 ;
+14 [label="gini = 0.42\nsamples = 10\nvalue = [3, 7]", fillcolor="#8ec7f0"] ;
+12 -> 14 ;
+}
