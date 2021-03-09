@@ -1,27 +1,30 @@
-- Time Management:
-    - Day 1 (Friday, 5th of March)
-        - Finish Planning Stage
-            - Completed
-        - Finish the Acquire Stage
-            - Completed
-    - Day 2 ( Saturday, 6th of March)
-        - Finish Prepare stage
-            - 
-        - Finsih Explore Stage
-            - 
-    - Day 3 (Sunday, 7th of March)
-        - Finish MOdel and Evaluate Stage
-            - 
-        - Clean up Notebook
-            - 
-        - Start practicing delivery
-            - 
-    - Day 4 (Monday, 8th of March)
-        - Practice
-        - Practice
-        - Practice
-    - Day 5 (Tuesday, 9th of March)
-        - Present
+Data Dictonary
+**senior_citizen** = senior or not senior(int - (0 or 1))
+**partner**	= has partner or not-(int - (0 or 1))
+**dependents** = has dependent or not-(int - (0 or 1))
+**phone_service** = has a phone or not-(int - (0 or 1))
+**tenure** = How long (in months) they have been with the company(float)
+**multiple_lines** = has a multiple lines or not(int - (0 or 1))
+**online_security**	= security or not (int - (0 or 1))
+**online_backup** = backup or not (int - (0 or 1))
+**device_protection** = protection or not (int - (0 or 1))
+**tech_support** = support or not (int - (0 or 1))
+**streaming_tv** = tv streaming or not (int - (0 or 1))
+**streaming_movies** = movie stremaing or not (int - (0 or 1))
+**paperless_billing** = paperless or not (int - (0 or 1))
+**monthly_charges** = how much customers are charged each month (float)
+**total_charges** = how much each customer has been charged through their tenure (float)
+**churn** = churned or not (int - (0 or 1))
+**contract_type** = are the month to month, one year, or two year customers (object)
+**is_female** = are they female or not (int - (0 or 1))
+**DSL** = Are the DSL customers or not (int - (0 or 1))
+**fiber_optic** =  Are they fiber customers or not (int - (0 or 1))
+**no_internet** =  Do they have internet or not (int - (0 or 1))
+**bank_transfer** = Do they pay with bank transfers or not (int - (0 or 1))
+**credit_card** = Do they pay with a credit card or not (int - (0 or 1))
+**electronic_check** = Do they pay with electronic checks or not (int - (0 or 1))
+**mailed_check** = Do they pay with mailed in checks or not (int - (0 or 1))
+
 
 # Project Planning
  **Plan** -> Acquire -> Prepare -> Explore -> Model & Evaluate -> Deliver
@@ -151,6 +154,7 @@
     - If someone has Fiber they are more likey to churn
     - If someone has a phone service they are more likely to stay.
     - Contracts of single people with no children, with the a month to month contract have extremely high churn.
+
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
