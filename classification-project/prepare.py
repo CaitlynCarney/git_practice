@@ -19,7 +19,7 @@ def clean_telco(df):
         'online_protection'
         'tech_support'
     encode internet_service_type, payment_type into seperate new columns and add them to the df
-    will remove payment_type_id, internet_service_type_id, contract_type_id, customer_id, gender columns, contract_type, internet_service_type, 
+    will remove payment_type_id, internet_service_type_id, contract_type_id, gender columns, contract_type, internet_service_type, 
     and payment_type
     rename internet_service_type_DSL to DSL
     rename internet_service_type_Fiber optic to fiber_optic
@@ -28,15 +28,11 @@ def clean_telco(df):
     rename payment_type_Credit card (automatic) to credit_card
     rename payment_type_Electronic check to electronic_check
     rename payment_type_Mailed check to mailed_check
-    add new columns: 'single_no_kids
     change columns to integer format instead of object or string: 'is_female', 'partner', 'dependents', 'phone_service', 'streaming_tv', 'streaming_movies', 'paperless_billing', 'churn', 'multiple_lines', 'online_security', 'online_backup', 'device_protections', 'tech_support', 'total_charges'
     return: a single pandas dataframe with the above operations performed
     '''
     dummy_df = pd.get_dummies(df[["internet_service_type", "payment_type"]], drop_first=False)
     df = pd.concat([df, dummy_df], axis=1)
-    df['single_no_dep'] = (df['partner'] + df['dependents']).apply(lambda x: 1 if x == 0 else 0)
-    df['no_streaming'] = (df['streaming_tv'] + df['streaming_movies']).apply(lambda x: 1 if x == 0 else 0)
-    df['tenure_grouped'] = pd.cut(df.tenure, bins = [0, 20, 40, 60, 80], labels=['1-20', '20-40', '40-60', '60-80'])
     df["is_female"] = df.gender == "Female"
     df['is_female'] = (df['is_female'] == True ).astype(int)
     df["partner"] = df.partner == "Yes"
@@ -63,7 +59,7 @@ def clean_telco(df):
     df['device_protection'] = (df['device_protection'] == True ).astype(int)
     df["tech_support"] = df.tech_support == "Yes"
     df['tech_support'] = (df['tech_support'] == True ).astype(int)
-    df = df.drop(["payment_type_id", 'internet_service_type_id', 'contract_type_id', 'customer_id', 'gender', "contract_type", 'internet_service_type', 'payment_type'], axis=1)
+    df = df.drop(["payment_type_id", 'internet_service_type_id', 'contract_type_id', 'gender', "contract_type", 'internet_service_type', 'payment_type'], axis=1)
     df = df.rename(columns={'internet_service_type_DSL': 'DSL', 
                        'internet_service_type_Fiber optic': 'fiber_optic', 
                        'internet_service_type_None': 'no_internet', 
