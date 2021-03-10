@@ -161,29 +161,125 @@ Data Dictonary
 # Project Acquiring
  Plan -> **Acquire** -> Prepare -> Explore -> Model & Evaluate -> Deliver
 
+Functions used can be found in acquire.py in git hub repo
 
+1. acquire the get_churn_data as df
+2. check out the .info
+3. check out the .describe
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Project Preperation
  Plan -> Acquire -> **Prepare** -> Explore -> Model & Evaluate -> Deliver
 
+Functions used can be found in prepare.py in git hub repo
 
+1. Clean the data:
+                clean_telco will take one argument df, a pandas dataframe, anticipated to be the telco_churn dataset
+                change column form bool to interger where 0 stands for no/false and 1 stands for yes/true:
+                    'is_female'
+                    'partner'
+                    'dependents'
+                    'phone_service'
+                    'streaming_tv'
+                    'streaming_movies'
+                    'paperless_billing'
+                    'churn'
+                    'multiple_lines'
+                    'online_security'
+                    'online_backup'
+                    'online_protection'
+                    'tech_support'
+                encode internet_service_type, payment_type into seperate new columns and add them to the df
+                will remove payment_type_id, internet_service_type_id, contract_type_id, gender columns, contract_type, internet_service_type, 
+                and payment_type
+                rename internet_service_type_DSL to DSL
+                rename internet_service_type_Fiber optic to fiber_optic
+                rename internet_service_type_None to no_internet
+                rename payment_type_Bank transfer (automatic) to bank_transfer
+                rename payment_type_Credit card (automatic) to credit_card
+                rename payment_type_Electronic check to electronic_check
+                rename payment_type_Mailed check to mailed_check
+                change columns to integer format instead of object or string: 'is_female', 'partner', 'dependents', 'phone_service', 'streaming_tv', 'streaming_movies', 'paperless_billing', 'churn', 'multiple_lines', 'online_security', 'online_backup', 'device_protections', 'tech_support', 'total_charges'
+                return: a single pandas dataframe with the above operations performed
+2. check out the new .info
+3. check out the new .describe
+4. check out the calue_counts
+5. run a df.isna().sum()
+    - returned 0
+6. run a df.null().sum()
+    -returned 0
+7. split the data
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Project Exploration
  Plan -> Acquire -> Prepare -> **Explore** -> Model & Evaluate -> Deliver
 
-
-
+1. pull my acquire
+2. pull my prepare and prepare_telco
+3. split my data
+4. create correlation heat map
+        - In the above chart:
+            - the darked the color the stronger the correlation is
+            - the lighter the color the weaker the correlation is
+        - The strongest correlations to churn are:
+            - monthly charges
+                - .2
+            - tenure
+                - -.35
+            - fiber optic service
+                - .31
+            - electronic check payment
+                - .3
+            - no internet service
+                - -.23
+        - Monthly Charges:
+            - Continuous
+        - Tenure:
+            - Continuous
+        - Fiber optic
+            - Categorical
+        - Electronic check
+            - Categorical
+        - No internet Service
+            - Categorical
+5. Create histograms for features being used
+6. Run a stat test for each feature
+    - t test for categorical vs continuous
+    - chi test for categorical vs categorical
+7. Answering my questions:
+    How much of churn is effected by high monthly charges?
+        20%
+    at what price is there a spike?
+        70 per month
+    does it go back down after the spike(if there is one)?
+        at 110 per month the churn starts going back down
+    Does tenure have high churn?
+        yes
+    How many fiber optic customers churn?
+        905 of the 2170 fiber optic customers churn
+            41.7% of the fiber optic customers churn
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Project Modeling and Evaluation
  Plan -> Acquire -> Prepare -> Explore -> **Model & Evaluate** -> Deliver
 
-
+1. Create prediction models with in sample data
+    - baseline accuracy
+        - 0.73
+    - logit
+        - .8
+    - decision tree
+        - .78
+    - random forest
+        - .78
+    - knn
+        - .79
+2. Logit ran best with all 5 features
+3. Run the Logit with out of sample
+    - .8 accuracy 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
