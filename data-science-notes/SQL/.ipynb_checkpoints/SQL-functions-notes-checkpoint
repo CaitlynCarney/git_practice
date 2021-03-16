@@ -1,0 +1,86 @@
+Transforms data
+
+COUNT
+    - gives number of rows a query results in
+
+CONCAT
+    - adds strings together
+
+        SELECT CONCAT(first_name, ' ', last_name)
+        FROM employees
+        LIMIT 10;
+            - results in first and last name combined and shows the first 10 results
+
+SUBSTR
+    - extracts part of a string
+
+        SELECT SUBSTR(upper("hello"), 4, 2);
+            - where the 4 is indicates where to start
+            - where the 2 is indicated how many characters long
+
+REPLACE
+    - manipulates a string by replacing
+
+        SELECT REPLACE(title, "Senior", "Lead")
+        FROM title
+
+NOW
+    - returns the current date and time
+        . YYYY-MM-DD HH:MM:SS
+
+        SELECT NOW();
+
+CURDATE
+    - returns date 
+        . YYYY-MM-DD
+
+        SELECT CURDATE();
+
+CURTIME
+    - returns time 
+        . HH:DD:MM
+
+        SELECT CURTIME();
+
+UNI_TIME
+    - used to represent time as an integer
+
+
+SELECT *
+FROM salaries
+WHERE to_date > CURDATE()
+
+AVG
+    - shows the mean
+
+        SELECT AVG(salary)
+        FROM salaries
+        WHERE to_date > CURDATE();
+
+MIN
+    - shows the minimum
+
+        SELECT MIN(salary) as minimum_current_salary
+        FROM salaries
+        WHERE to_date > CURDATE();
+
+        SELECT MIN(emp_no)
+        FROM employees;
+
+Casting lets us convert one type into another
+
+CAST
+    - turns something into another
+
+        SELECT
+            CAST(123 as char)
+            CAST('123' as unsigned); 
+
+        SELECT
+            CAST ("-123" as signed);
+                . casting a string with a negative number to an integer
+
+        SELECT  
+            CAST(78210 as char);
+                . casting a number to a string
+            
