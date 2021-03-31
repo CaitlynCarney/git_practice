@@ -1,7 +1,15 @@
 from env import host, user, password
 import pandas as pd
 import numpy as np
+from scipy import stats
+from math import sqrt
+from statsmodels.formula.api import ols
 
+from sklearn.metrics import mean_squared_error, r2_score, explained_variance_score, mean_absolute_error
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import f_regression 
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 def acquire_zillow():
     '''
@@ -15,10 +23,9 @@ def acquire_zillow():
     left join heatingorsystemtype using(heatingorsystemtypeid)
     left join storytype using(storytypeid)
     left join typeconstructiontype using(typeconstructiontypeid)
-    join (select parcelid, max(transactiondate) as transactiondate
+    join (select parcelid, max(logerror) as logerror, max(transactiondate) as transactiondate
                 from predictions_2017
-                group by parcelid) as pred_17
-        using(parcelid)
+                group by parcelid) as pred_17 using(parcelid)
     where transactiondate like '2017-%%-%%'
         and parcelid in(
             select distinct parcelid)
@@ -30,11 +37,98 @@ def acquire_zillow():
     df = pd.read_sql(sql_query, connection)
     return df
 
+
 def clean_zillow(df):
     '''This function takes in the df
-    applies all the cleaning funcitons previously created'''
-    df = wrangle.only_one_unit_homes(df)
-    df = wrangle.drop_50_pct_null(df)
+    applies all the cleaning funcitons previously created
+    drops columns
+    renames columns'''
+    # assuming null value for pool means no pool
+    df.poolcnt.fillna(0, inplace = True)
+    # assuming null calie for fireplace means no pool
+    df.fireplacecnt.fillna(0, inplace = True)
+    df = only_one_unit_homes(df)
+    df = drop_50_pct_null(df)
+    
+    # create dummy variables and add them to the df
+    dummy_df =  pd.get_dummies(df['fips'])
+    dummy_df.columns = ['in_los_angeles', 'in_orange_county', 'in_ventura']
+    df = pd.concat([df, dummy_df], axis=1)
+    df['fips'] = df.fips.replace('6,037.00', 6037)
+    df['fips'] = df.fips.replace('6,059.00', 6059)
+    df['fips'] = df.fips.replace('6,111.00', 6111)
+    #create new feature house_age
+    today = pd.to_datetime('today')
+    df['house_age'] = today.year - df['yearbuilt']
+    #create new feature tax_rate which is the monthyl taxes
+    df['tax_rate'] = df.taxvaluedollarcnt / df.taxamount
+    # create new feature for log_error_levels
+    df['level_of_log_error'] = pd.qcut(df.logerror, q=5, labels=['L1', 'L2', 'L3', 'L4', 'L5'])
+    #drop features
+    df = df.drop(['propertycountylandusecode', 'propertyzoningdesc', 
+                 'heatingorsystemdesc', 'transactiondate',
+                  'finishedsquarefeet12', 'id', 'censustractandblock',
+                 'rawcensustractandblock', 'calculatedbathnbr', 
+                 'assessmentyear'], axis=1)
+    #rename features
+    df = df.rename(columns={'heatingorsystemtypeid':'has_heating_system', 
+                           'bathroomcnt':'bathrooms', 'bedroomcnt':'bedrooms', 
+                           'buildingqualitytypeid':'quality',
+                           'calculatedfinishedsquarefeet':'square_feet', 
+                           'fullbathcnt':'full_bathrooms',
+                           'lotsizesquarefeet':'lot_square_feet', 
+                           'propertylandusetypeid':'land_type',
+                           'regionidcity':'city', 'regionidcounty':'county',
+                           'regionidzip':'zip_code', 'roomcnt':'room_count',
+                           'structuretaxvaluedollarcnt':'structure_tax_value',
+                           'taxvaluedollarcnt':'tax_value', 
+                           'landtaxvaluedollarcnt':'land_tax_value', 
+                           'fireplacecnt':'has_fireplace',
+                           'poolcnt':'has_pool'})
+    # assuming that null means no heating bc it is southern CA
+    df.has_heating_system.fillna('13', inplace = True)
+    # change has_heating_system to binary
+    df['has_heating_system'] = df.has_heating_system.replace([2.0, 7.0, 24.0, 6.0, 20.0, 13.0, 18.0, 1.0, 10.0, 11.0], 1)
+    df['has_heating_system'] = df.has_heating_system.replace('13', '0')
+    # drop all remaining null values
+    # all of these are 1 unit counts
+    df.unitcnt.fillna(1, inplace = True)
+    df['unitcnt'] = df.unitcnt.replace([2.0, 3.0, 4.0, 6.0], 1)
+    # replacing null in quality feature with its median range (6)
+    df.quality.fillna(6.0, inplace = True)
+    # replacing null in square_feet with its median
+    df.lot_square_feet.fillna(7313, inplace = True)
+     # replacing null in quality feature with its median
+    df.square_feet.fillna(1511, inplace = True)
+     # replacing null in quality feature with its median
+    df.full_bathrooms.fillna(2, inplace = True)
+     # replacing null in quality feature with its median
+    df.yearbuilt.fillna(1970, inplace = True)
+     # replacing null in quality feature with its median
+    df.structure_tax_value.fillna(134871, inplace = True)
+     # replacing null in quality feature with its median
+    df.house_age.fillna(51, inplace = True)
+     # replacing null in quality feature with its median
+    df.city.fillna(25218, inplace = True)
+     # replacing null in quality feature with its median
+    df.zip_code.fillna(96410, inplace = True)
+    # change has_fireplace to a binary
+    df['has_fireplace'] = df.has_fireplace.replace([2.0, 3.0, 4.0, 5.0], 1)
+    df['has_fireplace'] = df.has_fireplace.replace(0.0, 0)
+    #fix has_pool to int
+    df['has_pool'] = df.has_fireplace.replace(1.0, 1)
+    df['has_pool'] = df.has_fireplace.replace(0.0, 0)
+    # change unitcnt and has_heating_system to integers istead of objects
+    df['has_heating_system'] = (df['has_heating_system'] == True ).astype(int)
+    df['unitcnt'] = (df['unitcnt'] == True ).astype(int)
+    #drop remaining null values
+    df = df.dropna()
+    # change la, oc, and vent into int
+    df['in_los_angeles'] = (df['in_los_angeles'] == True ).astype(int)
+    df['in_orange_county'] = (df['in_orange_county'] == True ).astype(int)
+    df['in_ventura'] = (df['in_ventura'] == True ).astype(int)
+    # set index as parcelid
+    df = df.set_index('parcelid')
     return df
 
 def missing_zero_values_table(df):
@@ -55,6 +149,39 @@ def missing_zero_values_table(df):
           " columns that have NULL values.")
 #         mz_table.to_excel('D:/sampledata/missing_and_zero_values.xlsx', freeze_panes=(1,0), index = False)
         return mz_table
+
+def split_zillow(df):
+    '''This fuction takes in a df 
+    splits into train, test, validate
+    return: three pandas dataframes: train, validate, test
+    '''
+    # split the focused zillow data
+    train_validate, test = train_test_split(df, test_size=.2, random_state=1234)
+    train, validate = train_test_split(train_validate, test_size=.3, 
+                                       random_state=1234)
+    return train, validate, test
+
+
+scale_columns = ['bathrooms', 'bedrooms', 'quality', 
+                  'square_feet', 'full_bathrooms', 
+                  'latitude', 'longitude', 'lot_square_feet', 'has_pool', 
+                  'land_type', 'city', 'county', 'zip_code', 
+                 'room_count', 'unitcnt', 'structure_tax_value', 
+                 'tax_value',  'land_tax_value', 'taxamount',
+                  'house_age', 'tax_rate']
+
+def scale_my_data(train, validate, test, scale_columns):
+    scaler = MinMaxScaler()
+    scaler.fit(train[scale_columns])
+    
+    train_scaled = scaler.transform(train[scale_columns])
+    validate_scaled = scaler.transform(validate[scale_columns])
+    test_scaled = scaler.transform(test[scale_columns])
+    return train_scaled, validate_scaled, test_scaled
+
+
+
+
 
 def null_tables(df):
     '''This function will take in a df
