@@ -89,14 +89,6 @@ def plot_scatter(train, categorical_target, continuous_target, quant):
 
 
 
-Message Matthew Dalton
-
-
-
-
-
-
-
 
 
 
