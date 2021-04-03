@@ -49,7 +49,7 @@ def clean_zillow(df):
     df.fireplacecnt.fillna(0, inplace = True)
     df = only_one_unit_homes(df)
     df = drop_50_pct_null(df)
-    
+  
     # create dummy variables and add them to the df
     dummy_df =  pd.get_dummies(df['fips'])
     dummy_df.columns = ['in_los_angeles', 'in_orange_county', 'in_ventura']
@@ -64,6 +64,8 @@ def clean_zillow(df):
     df['tax_rate'] = df.taxvaluedollarcnt / df.taxamount
     # create new feature for log_error_levels
     df['level_of_log_error'] = pd.qcut(df.logerror, q=5, labels=['L1', 'L2', 'L3', 'L4', 'L5'])
+    # create new feature acres
+    df['acres'] = df.lotsizesquarefeet/43560
     #drop features
     df = df.drop(['propertycountylandusecode', 'propertyzoningdesc', 
                  'heatingorsystemdesc', 'transactiondate',

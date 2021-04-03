@@ -54,6 +54,7 @@ def clean_zillow(df):
     df = df[df.bedrooms >= 0.5]
     # df have gone from 33,849 rows to 32,538 rows
         # the df has lost 1,311 rows
+    
     return df
 
 def split_clean_zillow(df):
