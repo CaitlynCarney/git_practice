@@ -1,9 +1,21 @@
-import env
 import pandas as pd
 
+import env
+
+import numpy as np
+
 import sklearn.preprocessing
+from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.cluster import KMeans
+from sklearn.datasets.samples_generator import make_blobs
+
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import seaborn as sns
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def get_connection(db, user=env.user, host=env.host, password=env.password):
@@ -63,6 +75,7 @@ def drop_50_pct_null(df):
 def clean_zillow(df):
     '''This function takes in the df
     applies all the cleaning funcitons previously created
+    creates features
     drops columns
     renames columns'''
     # assuming null value for pool and fireplacecnt means none
@@ -81,7 +94,6 @@ def clean_zillow(df):
     today = pd.to_datetime('today')
     df['house_age'] = today.year - df['yearbuilt']
     df['tax_rate'] = df.taxvaluedollarcnt / df.taxamount
-    df['level_of_log_error'] = pd.qcut(df.logerror, q=5, labels=['L1', 'L2', 'L3', 'L4', 'L5'])
     df['acres'] = df.lotsizesquarefeet/43560
     #drop features
     df = df.drop(['propertycountylandusecode', 'propertyzoningdesc', 
@@ -156,7 +168,7 @@ def clean_zillow(df):
     # bin some of the large features
     # bin the square feet
     df['square_feet_bins'] = pd.cut(df.square_feet, 
-                            bins = [0,500,1000,1500,2000,2500,3000,3500,4000,4600],
+                            bins = [0,500,1000,1500,2000,2500,3000,3500,4000,6000],
                             labels = [1, 2, 3, 4, 5, 6, 7, 8,9])
     df['square_feet_bins'] = (df['square_feet_bins']).astype(int)
     # bin lot square feet
@@ -166,9 +178,13 @@ def clean_zillow(df):
     df['lot_sqft_bins'] = (df['lot_sqft_bins']).astype(int)
     # bin acres
     df['acre_bins'] = pd.cut(df.acres, 
-                            bins = [0,25,50,75,100,125,150,175],
+                            bins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7],
                             labels = [0, 1, 2, 3, 4, 5, 6])
     df['acre_bins'] = (df['acre_bins']).astype(int)
+    # bin log error
+    df['level_of_log_error'] = pd.cut(df.logerror, 
+                            bins = [-5,-1,-.15,.15,1,5],
+                            labels = ['Way Under', 'Under', 'Accurate', 'Over', 'Way Over'])
     return df
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -186,48 +202,6 @@ def split_zillow(df):
                                        random_state=1234)
     return train, validate, test
 
-def train_validate_test_split(df, seed=123):
-    '''
-    This function takes in a dataframe, the name of the target variable
-    (for stratification purposes), and an integer for a setting a seed
-    and splits the data into train, validate and test. 
-    Test is 20% of the original dataset, validate is .30*.80= 24% of the 
-    original dataset, and train is .70*.80= 56% of the original dataset. 
-    The function returns, in this order, train, validate and test dataframes. 
-    '''
-    train_validate, test = train_test_split(df, test_size=0.2, 
-                                            random_state=seed, 
-                                            # stratify=df[target]
-                                           )
-    train, validate = train_test_split(train_validate, test_size=0.3, 
-                                       random_state=seed,
-                                       # stratify=train_validate[target]
-                                      )
-    return train, validate, test
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-def minmax_scale(train, validate, test):
-    
-    # Make the thing
-    scaler = sklearn.preprocessing.MinMaxScaler()
-
-    # We fit on the training data
-    # in a way, we treat our scalers like our ML models
-    # we only .fit on the training data
-    scaler.fit(train)
-    
-    train_scaled = scaler.transform(train)
-    validate_scaled = scaler.transform(validate)
-    test_scaled = scaler.transform(test)
-    
-    # turn the numpy arrays into dataframes
-    train = pd.DataFrame(train_scaled, columns=train.columns)
-    validate = pd.DataFrame(validate_scaled, columns=train.columns)
-    test = pd.DataFrame(test_scaled, columns=train.columns)
-    
-    return train, validate, test
 
 # Split the data into X_train, y_train, X_vlaidate, y_validate, X_train, and y_train
 
@@ -236,17 +210,16 @@ def split_train_validate_test(train, validate, test):
     splits them into X and y versions
     returns X_train, X_validate, X_test, y_train, y_validate, y_test'''
     X_train = train.drop(columns = ['logerror'])
-    y_train = train.logerror
+    y_train = pd.DataFrame(train.logerror)
     X_validate = validate.drop(columns=['logerror'])
-    y_validate = validate.logerror
+    y_validate = pd.DataFrame(validate.logerror)
     X_test = test.drop(columns=['logerror'])
-    y_test = test.logerror
+    y_test = pd.DataFrame(test.logerror)
     return X_train, X_validate, X_test, y_train, y_validate, y_test
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Scale the Data
-
 
 
 def scale_my_data(train, validate, test):
@@ -269,3 +242,133 @@ def scale_my_data(train, validate, test):
     test_scaled = pd.DataFrame(test_scaled)
     
     return train_scaled, validate_scaled, test_scaled
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# for longitude_latitude_houseage
+
+def start_longitude_latitude_houseage(train, validate, test):
+    kmeans = KMeans(n_clusters=5, random_state=123)
+    # identify columns we want to cluster on
+    cluster_cols = ['latitude', 'longitude', 'house_age']
+    # clustering on train, getting the cetnoids
+    kmeans = kmeans.fit(train[cluster_cols])
+    # identifying clusters in train
+    train['longitude_latitude_houseage_cluster'] = kmeans.predict(train[cluster_cols])
+    # identifying clusters in validate, test
+    validate['longitude_latitude_houseage_cluster'] = kmeans.predict(validate[cluster_cols])
+    test['longitude_latitude_houseage_cluster'] = kmeans.predict(test[cluster_cols])
+    return train, validate, test
+
+def predict_cluster_longitude_latitude_houseage(train, validate, test):
+    train, validate, test['longitude_latitude_houseage_cluster'] = kmeans.predict(train, validate, test)[cluster_cols]
+    return train, validate, test
+
+def get_dummy_longitude_latitude_houseage_cluster(train, validate, test):
+    dummy_df =  pd.get_dummies(train, validate, test)['longitude_latitude_houseage_cluster']
+    dummy_df.columns = ['Ventura', 'Orange County', 
+                    'North downtown LA', 'East downtown LA', 
+                    'North LA']
+    train, validate, test = pd.concat([train, validate, test, dummy_df], axis=1)
+    train, validate, test = train, validate, test.drop(['Orange County', 'East downtown LA', 
+                    'North downtown LA', 'longitude_latitude_houseage_cluster'], axis=1)
+    return train, validate, test
+
+def prep_longitude_latitude_houseage_clusters(train, validate, test):
+    train, validate, test = predict_cluster_longitude_latitude_houseage(train, validate, test)
+    train, validate, test = get_dummy_longitude_latitude_houseage_cluster(train, validate, test)
+    return train, validate, test
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# for taxes_cluster
+
+
+def predict_cluster_taxes(train, validate, test):
+    # identify columns we want to cluster on
+    cluster_cols = ['structure_tax_value', 'land_tax_value']
+    kmeans = KMeans(n_clusters=6, random_state=123)
+    # clustering on train, getting the cetnoids
+    kmeans = kmeans.fit(train[cluster_cols])
+    kmeans = kmeans.fit(validate[cluster_cols])
+    kmeans = kmeans.fit(test[cluster_cols])
+    
+    train['taxes_cluster'] = kmeans.predict(train[cluster_cols])
+    validate['taxes_cluster'] = kmeans.predict(validate[cluster_cols])
+    test['taxes_cluster'] = kmeans.predict(test[cluster_cols])
+    return train, validate, test
+
+def get_dummy_taxes_cluster(train, validate, test):
+    dummy_df =  pd.get_dummies(train, validate, test)['taxes_cluster']
+    dummy_df.columns = ['low_structure_and_land_tax', 'drop1',
+                        'drop2', 'medium_structure_low_land_tax', 
+                        'drop4', 'drop5']
+    train, validate, test = pd.concat([train, validate, test, dummy_df], axis=1)
+    train, validate, test = train, validate, test.drop(['drop1', 'drop2', 'drop4', 'drop5', 'taxes_cluster'], axis=1)
+    return train, validate, test
+
+def prep_taxes_clusters(train, validate, test):
+    train, validate, test = predict_cluster_taxes(train, validate, test)
+    train, validate, test = get_dummy_taxes_cluster(train, validate, test)
+    return train, validate, test
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# for quality_houseage_roomcount
+
+def start_quality_houseage_cluster(train, validate, test):
+    kmeans = KMeans(n_clusters=5, random_state=123)
+    # identify columns we want to cluster on
+    cluster_cols = ['quality', 'house_age', 'room_count']
+    # clustering on train, getting the cetnoids
+    kmeans = kmeans.fit(train[cluster_cols])
+    # identifying clusters in train
+    train['quality_houseage_roomcount_cluster'] = kmeans.predict(train[cluster_cols])
+    # identifying clusters in validate, test
+    validate['quality_houseage_roomcount_cluster'] = kmeans.predict(validate[cluster_cols])
+    test['quality_houseage_roomcount_cluster'] = kmeans.predict(test[cluster_cols])
+    return train, validate, test
+
+def predict_cluster_quality_houseage_roomcount(train, validate, test):
+    train, validate, test['quality_houseage_roomcount_cluster'] = kmeans.predict(train, validate, test)[cluster_cols]
+    return train, validate, test
+
+def get_dummy_quality_houseage_roomcount_cluster(train, validate, test):
+    dummy_df =  pd.get_dummies(train, validate, test)['quality_houseage_roomcount_cluster']
+    dummy_df.columns = ['house quality = 0', 
+                    'Older homes low quality', 
+                    'Younger homes avg. quality', 
+                    'Newer Homes High Quality', 
+                    'Older Homes High Quality']
+    train, validate, test = pd.concat([train, validate, test, dummy_df], axis=1)
+    train, validate, test = train, validate, test.drop(['Older homes low quality', 
+                    'Younger homes avg. quality', 
+                    'quality_houseage_roomcount_cluster'], axis=1)
+    return train, validate, test
+
+def prep_quality_houseage_roomcount_clusters(train, validate, test):
+    train, validate, test = predict_cluster_quality_houseage_roomcount(train, validate, test)
+    train, validate, test = get_dummy_quality_houseage_roomcount_cluster(train, validate, test)
+    return train, validate, test
+
+def focused_zillow(train, validate, test):
+    '''
+    takes in train
+    sets sepecific features to focus on
+    returns a focused data frame in a pandas dataframe
+    '''
+    # choose features to focus on
+    features = [
+    'logerror',
+    'latitude',
+    'longitude',
+    'Ventura',
+    'North LA',
+    'low_structure_and_land_tax',
+    'medium_structure_low_land_tax',
+    'house quality = 0',
+    'Newer Homes High Quality',
+    'Older Homes High Quality'] # the target
+    # return a df based only on these features
+    train = train[features]
+    validate = validate[features]
+    test = test[features]
+    return train, validate, test
+

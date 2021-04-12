@@ -1,9 +1,17 @@
 import env
 import pandas as pd
+import numpy as np
 
 import sklearn.preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.cluster import KMeans
+from sklearn.datasets.samples_generator import make_blobs
+
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import seaborn as sns
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def get_connection(db, user=env.user, host=env.host, password=env.password):
@@ -82,7 +90,6 @@ def clean_zillow(df):
     today = pd.to_datetime('today')
     df['house_age'] = today.year - df['yearbuilt']
     df['tax_rate'] = df.taxvaluedollarcnt / df.taxamount
-    df['level_of_log_error'] = pd.qcut(df.logerror, q=5, labels=['L1', 'L2', 'L3', 'L4', 'L5'])
     df['acres'] = df.lotsizesquarefeet/43560
     #drop features
     df = df.drop(['propertycountylandusecode', 'propertyzoningdesc', 
@@ -149,7 +156,7 @@ def clean_zillow(df):
     # set index as parcelid
     df = df.set_index('parcelid')
     # finish dropping
-    df = df.drop(['Unnamed: 0', 'yearbuilt'], axis=1)
+    df = df.drop(['yearbuilt'], axis=1)
     # Handle outliers
     df = df[df.tax_value < 1153326.5]
     df = df[df.square_feet < 4506.0]
@@ -157,7 +164,7 @@ def clean_zillow(df):
     # bin some of the large features
     # bin the square feet
     df['square_feet_bins'] = pd.cut(df.square_feet, 
-                            bins = [0,500,1000,1500,2000,2500,3000,3500,4000,4600],
+                            bins = [0,500,1000,1500,2000,2500,3000,3500,4000,6000],
                             labels = [1, 2, 3, 4, 5, 6, 7, 8,9])
     df['square_feet_bins'] = (df['square_feet_bins']).astype(int)
     # bin lot square feet
@@ -167,9 +174,13 @@ def clean_zillow(df):
     df['lot_sqft_bins'] = (df['lot_sqft_bins']).astype(int)
     # bin acres
     df['acre_bins'] = pd.cut(df.acres, 
-                            bins = [0,25,50,75,100,125,150,175],
+                            bins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7],
                             labels = [0, 1, 2, 3, 4, 5, 6])
     df['acre_bins'] = (df['acre_bins']).astype(int)
+    # bin log error
+    df['level_of_log_error'] = pd.cut(df.logerror, 
+                            bins = [-5,-1,-.15,.15,1,5],
+                            labels = ['Way Under', 'Under', 'Accurate', 'Over', 'Way Over'])
     return df
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -227,3 +238,134 @@ def scale_my_data(train, validate, test):
     test_scaled = pd.DataFrame(test_scaled)
     
     return train_scaled, validate_scaled, test_scaled
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# for longitude_latitude_houseage
+
+def start_taxes_cluster(train, validate, test):
+    kmeans = KMeans(n_clusters=5, random_state=123)
+    # identify columns we want to cluster on
+    cluster_cols = ['latitude', 'longitude', 'house_age']
+    # clustering on train, getting the cetnoids
+    kmeans = kmeans.fit(train[cluster_cols])
+    # identifying clusters in train
+    train['longitude_latitude_houseage_cluster'] = kmeans.predict(train[cluster_cols])
+    # identifying clusters in validate, test
+    validate['longitude_latitude_houseage_cluster'] = kmeans.predict(validate[cluster_cols])
+    test['longitude_latitude_houseage_cluster'] = kmeans.predict(test[cluster_cols])
+    return train, validate, test
+
+def predict_cluster_longitude_latitude_houseage(some_dataframe):
+    some_dataframe['longitude_latitude_houseage_cluster'] = kmeans.predict(some_dataframe[cluster_cols])
+    return some_dataframe
+
+def get_dummy_longitude_latitude_houseage_cluster(some_dataframe):
+    dummy_df =  pd.get_dummies(some_dataframe['longitude_latitude_houseage_cluster'])
+    dummy_df.columns = ['Ventura', 'Orange County', 
+                    'North downtown LA', 'East downtown LA', 
+                    'North LA']
+    some_dataframe = pd.concat([some_dataframe, dummy_df], axis=1)
+    some_dataframe = some_dataframe.drop(['Orange County', 'East downtown LA', 
+                    'North downtown LA', 'longitude_latitude_houseage_cluster'], axis=1)
+    return some_dataframe
+
+def prep_longitude_latitude_houseage_clusters(some_dataframe):
+    some_dataframe = predict_cluster_longitude_latitude_houseage(some_dataframe)
+    some_dataframe = get_dummy_longitude_latitude_houseage_cluster(some_dataframe)
+    return some_dataframe
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# for taxes_cluster
+
+def start_taxes_cluster(train, validate, test):
+    kmeans = KMeans(n_clusters=6, random_state=123)
+    # identify columns we want to cluster on
+    cluster_cols = ['structure_tax_value', 'land_tax_value']
+    # clustering on train, getting the cetnoids
+    kmeans = kmeans.fit(train[cluster_cols])
+    # identifying clusters in train
+    train['taxes_cluster'] = kmeans.predict(train[cluster_cols])
+    # identifying clusters in validate, test
+    validate['taxes_cluster'] = kmeans.predict(validate[cluster_cols])
+    test['taxes_cluster'] = kmeans.predict(test[cluster_cols])
+    return train, validate, test
+
+def predict_cluster_taxes(some_dataframe):
+    some_dataframe['taxes_cluster'] = kmeans.predict(some_dataframe[cluster_cols])
+    return some_dataframe
+
+def get_dummy_taxes_cluster(some_dataframe):
+    dummy_df =  pd.get_dummies(some_dataframe['taxes_cluster'])
+    dummy_df.columns = ['low_structure_and_land_tax', 'drop1',
+                        'drop2', 'medium_structure_low_land_tax', 
+                        'drop4', 'drop5']
+    some_dataframe = pd.concat([some_dataframe, dummy_df], axis=1)
+    some_dataframe = some_dataframe.drop(['drop1', 'drop2', 'drop4', 'drop5', 'taxes_cluster'], axis=1)
+    return some_dataframe
+
+def prep_taxes_clusters(some_dataframe):
+    some_dataframe = predict_cluster_taxes(some_dataframe)
+    some_dataframe = get_dummy_taxes_cluster(some_dataframe)
+    return some_dataframe
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# for quality_houseage_roomcount
+
+def start_quality_houseage_cluster(train, validate, test):
+    kmeans = KMeans(n_clusters=5, random_state=123)
+    # identify columns we want to cluster on
+    cluster_cols = ['quality', 'house_age', 'room_count']
+    # clustering on train, getting the cetnoids
+    kmeans = kmeans.fit(train[cluster_cols])
+    # identifying clusters in train
+    train['quality_houseage_roomcount_cluster'] = kmeans.predict(train[cluster_cols])
+    # identifying clusters in validate, test
+    validate['quality_houseage_roomcount_cluster'] = kmeans.predict(validate[cluster_cols])
+    test['quality_houseage_roomcount_cluster'] = kmeans.predict(test[cluster_cols])
+    return train, validate, test
+
+def predict_cluster_quality_houseage_roomcount(some_dataframe):
+    some_dataframe['quality_houseage_roomcount_cluster'] = kmeans.predict(some_dataframe[cluster_cols])
+    return some_dataframe
+
+def get_dummy_quality_houseage_roomcount_cluster(some_dataframe):
+    dummy_df =  pd.get_dummies(some_dataframe['quality_houseage_roomcount_cluster'])
+    dummy_df.columns = ['house quality = 0', 
+                    'Older homes low quality', 
+                    'Younger homes avg. quality', 
+                    'Newer Homes High Quality', 
+                    'Older Homes High Quality']
+    some_dataframe = pd.concat([some_dataframe, dummy_df], axis=1)
+    some_dataframe = some_dataframe.drop(['Older homes low quality', 
+                    'Younger homes avg. quality', 
+                    'quality_houseage_roomcount_cluster'], axis=1)
+    return some_dataframe
+
+def prep_quality_houseage_roomcount_clusters(some_dataframe):
+    some_dataframe = predict_cluster_quality_houseage_roomcount(some_dataframe)
+    some_dataframe = get_dummy_quality_houseage_roomcount_cluster(some_dataframe)
+    return some_dataframe
+
+def focused_zillow(train, validate, test):
+    '''
+    takes in train
+    sets sepecific features to focus on
+    returns a focused data frame in a pandas dataframe
+    '''
+    # choose features to focus on
+    features = [
+    'logerror',
+    'latitude',
+    'longitude',
+    'Ventura',
+    'North LA',
+    'low_structure_and_land_tax',
+    'medium_structure_low_land_tax',
+    'house quality = 0',
+    'Newer Homes High Quality',
+    'Older Homes High Quality'] # the target
+    # return a df based only on these features
+    train = train[features]
+    validate = validate[features]
+    test = test[features]
+    return train, validate, test
